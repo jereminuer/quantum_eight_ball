@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic 8-Ball</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Oswald');
+
+    html {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+    }
+
+    .surface {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(35deg, #673ab7, #9c27b0);
+      color: #fff;
+    }
+
+    .ball-and-shadow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 5em;
+      left: 0;
+      margin: auto;
+      height: 300px;
+      width: 300px;
+    }
+
+    .ball {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgb(30, 30, 30);
+      border-radius: 100%;
+      box-shadow: inset -10px 10px 50px rgba(166, 67, 195, .63), inset 5px -5px 50px rgba(0, 0, 0, 1), inset 50px -50px 200px rgb(0, 0, 0), inset 0px -20px 20px rgb(60, 0, 60);
+      overflow: hidden;
+      animation: rotateBall 10s linear infinite; /* Rotation animation */
+    }
+
+    /* Animation for rotating the ball */
+    @keyframes rotateBall {
+      from {
+        transform: rotate(10deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ball .upper-shine {
+      position: absolute;
+      background: radial-gradient(ellipse at center, rgba(145, 43, 177, 0) 0%, rgba(214, 121, 241, 0.21) 7%, rgba(0, 0, 0, .1) 30%, rgba(0, 0, 0, 0) 100%);
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      left: 60%;
+      top: 30%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .ball .inside {
+      position: absolute;
+      background: linear-gradient(45deg, rgba(20, 0, 20, 1) 0%, rgba(40, 0, 40, 1) 100%);
+      width: 160px;
+      height: 160px;
+      border-radius: 100%;
+      border: solid 4px rgba(20, 20, 20, .8);
+      box-shadow: 10px -10px 10px rgba(20, 20, 20, .6), 10px -10px 1px rgba(20, 20, 20, .5), -10px -10px 1px rgba(47, 24, 47, .34), 10px 10px 1px rgba(50, 50, 50, 0.5), -10px 10px 1px rgba(115, 102, 115, .14), 8px -10px 10px rgb(45, 23, 45), -8px 10px 10px rgba(117, 69, 117, .28), inset -10px 10px 40px rgba(200, 0, 20, .05), inset 10px -10px 40px rgba(20, 0, 200, .1);
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+    }
+
+    .ball .answer {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      transform: scale(.9) rotate(15deg);
+      opacity: 0;
+      transition: transform 1.3s ease, opacity 1.3s ease;
+    }
+
+    .ball:hover .answer {
+      transform: scale(1) rotate(0);
+      opacity: 1;
+    }
+
+    .ball .triangle {
+      position: absolute;
+      border: 69px solid transparent;
+      border-top: 121px solid rgba(255, 255, 255, .1);
+      top: 69%;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 0;
+      height: 0;
+      left: 0;
+    }
+
+    .ball .inside-shadow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: 100%;
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, .8), inset 0 0 40px #000;
+      pointer-events: none;
+    }
+
+    .ball .content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ball .text {
+      text-align: center;
+      width: 50%;
+      margin-top: .4em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: .01em;
+      text-indent: .01em;
+      color: rgba(240, 220, 240, .86);
+      text-shadow: 1px 1px 2px rgba(40, 0, 200, .8);
+    }
+
+    .shadow {
+      position: absolute;
+      bottom: -2.5%;
+      right: 0;
+      top: auto;
+      left: 0;
+      margin-left: auto;
+      margin-right: auto;
+      height: 60%;
+      width: 75%;
+      max-width: 90vw;
+      background: rgba(10, 10, 10, 1);
+      border-radius: 100%;
+      filter: blur(40px);
+      -webkit-filter: blur(20px);
+      transform: scaleY(.1) translate(0);
+      transform-origin: bottom;
+    }
+
+    .surface {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(35deg, #673ab7, #9c27b0);
+      color: #fff;
+    }
+
+    .ball-and-shadow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 5em;
+      left: 0;
+      margin: auto;
+      height: 300px;
+      width: 300px;
+    }
+
+    .ball {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgb(10, 30, 30);
+      border-radius: 100%;
+      box-shadow: inset -10px 10px 50px rgba(166, 67, 195, .63), inset 5px -5px 50px rgba(0, 0, 0, 1), inset 50px -50px 200px rgb(0, 0, 0), inset 0px -20px 20px rgb(60, 0, 60);
+      overflow: hidden;
+      animation: rotateBall 10s linear infinite; /* Rotation animation */
+    }
+
+    /* Animation for rotating the ball */
+    @keyframes rotateBall {
+      from {
+        transform: rotate(340deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ball .upper-shine {
+      position: absolute;
+      background: radial-gradient(ellipse at center, rgba(145, 43, 177, 0) 0%, rgba(214, 121, 241, 0.21) 7%, rgba(0, 0, 0, .1) 30%, rgba(0, 0, 0, 0) 100%);
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      left: 60%;
+      top: 30%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .ball .inside {
+      position: absolute;
+      background: linear-gradient(45deg, rgba(20, 0, 20, 1) 0%, rgba(40, 0, 40, 1) 100%);
+      width: 160px;
+      height: 160px;
+      border-radius: 100%;
+      border: solid 4px rgba(20, 20, 20, .8);
+      box-shadow: 10px -10px 10px rgba(20, 20, 20, .6), 10px -10px 1px rgba(20, 20, 20, .5), -10px -10px 1px rgba(47, 24, 47, .34), 10px 10px 1px rgba(50, 50, 50, 0.5), -10px 10px 1px rgba(115, 102, 115, .14), 8px -10px 10px rgb(45, 23, 45), -8px 10px 10px rgba(117, 69, 117, .28), inset -10px 10px 40px rgba(200, 0, 20, .05), inset 10px -10px 40px rgba(20, 0, 200, .1);
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+    }
+
+    .ball .answer {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      transform: scale(.9) rotate(15deg);
+      opacity: 0;
+      transition: transform 1.3s ease, opacity 1.3s ease;
+    }
+
+    .ball:hover .answer {
+      transform: scale(1.2) rotate(0);
+      opacity: 1;
+    }
+
+    .ball .triangle {
+      position: absolute;
+      border: 69px solid transparent;
+      border-top: 121px solid rgba(255, 255, 255, .1);
+      top: 69%;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 0;
+      height: 0;
+      left: 0;
+    }
+
+    .ball .inside-shadow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: 100%;
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, .8), inset 0 0 40px #000;
+      pointer-events: none;
+    }
+
+    .ball .content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ball .text {
+      text-align: center;
+      width: 50%;
+      margin-top: .4em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: .01em;
+      text-indent: .01em;
+      color: rgba(240, 220, 240, .86);
+      text-shadow: 1px 1px 2px rgba(40, 0, 200, .8);
+    }
+
+    .shadow {
+      position: absolute;
+      bottom: -.5%;
+      right: 0;
+      top: auto;
+      left: 0;
+      margin-left: auto;
+      margin-right: auto;
+      height: 60%;
+      width: 75%;
+      max-width: 90vw;
+      background: rgba(10, 10, 10, 1);
+      border-radius: 100%;
+      filter: blur(40px);
+      -webkit-filter: blur(50px);
+      transform: scaleY(.1) translate(0);
+      transform-origin: bottom;
+    }
+  </style>
+</head>
+<body>
+  <div class="surface">
+    <div class="ball-and-shadow">
+      <div class="ball">
+        <div class="upper-shine"></div> 
+        <div class="insidef">
+          <div class="answer">
+            <div class="triangle"></div>
+            <div class="content">
+              <div class="text">
+                {{ answer }}
+              </div>
+            </div> 
+          </div>
+          <div class="inside-shadow"></div>
+        </div>
+      </div>
+      <div class="shadow"></div>
+    </div>
+    
+    <div class="ad">Advertisement</div>
+  </div>
+</body>
+</html>
+
+    
+  </style>
+</head>
+
+<body>
+  <div class="surface">
+    <div class="ball-and-shadow">
+      <div class="ball">
+        <div class="upper-shine"></div>
+        <div class="inside">
+          <div class="answer">
+            <div class="triangle"></div>
+            <div class="content">
+              <div class="text">
+                {{ answer }}
+              </div>
+            </div>
+          </div>
+          <div class="inside-shadow"></div>
+        </div>
+      </div>
+      <div class="shadow"></div>
+    </div>
+    
+   
+  </div>
+</body>
+</html>
