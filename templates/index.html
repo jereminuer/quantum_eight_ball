@@ -314,36 +314,23 @@
       transform-origin: bottom;
     }
   </style>
-</head>
-<body>
-  <div class="surface">
-    <div class="ball-and-shadow">
-      <div class="ball">
-        <div class="upper-shine"></div> 
-        <div class="insidef">
-          <div class="answer">
-            <div class="triangle"></div>
-            <div class="content">
-              <div class="text">
-                {{ answer }}
-              </div>
-            </div> 
-          </div>
-          <div class="inside-shadow"></div>
-        </div>
-      </div>
-      <div class="shadow"></div>
-    </div>
-    
-    <div class="ad">Advertisement</div>
-  </div>
-</body>
-</html>
+  <script>
+    function updateAnswer() {
+      fetch('/get_answer')
+        .then(response => response.json())
+        .then(data => {
+          document.querySelector('.text').textContent = data.answer;
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
-    
-  </style>
+    // Add event listener when the document is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const ball = document.querySelector('.ball');
+      ball.addEventListener('mouseenter', updateAnswer);
+    });
+  </script>
 </head>
-
 <body>
   <div class="surface">
     <div class="ball-and-shadow">
@@ -363,8 +350,6 @@
       </div>
       <div class="shadow"></div>
     </div>
-    
-   
   </div>
 </body>
 </html>
